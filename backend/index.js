@@ -1,10 +1,10 @@
-import readXlsxFile from 'read-excel-file/node';
-import Product from './productModel.js'; 
+import readXlsxFile from "read-excel-file/node";
+import Product from "./productModel.js";
 
 async function run() {
   try {
-    const rows = await readXlsxFile('14_2_41_Fakestore_catalog (1).xlsx');
-    const productsData = rows.slice(1).map(row => {
+    const rows = await readXlsxFile("catalog.xlsx");
+    const productsData = rows.slice(1).map((row) => {
       const price = parseFloat(row[2]);
       const rate = parseFloat(row[6]);
 
@@ -17,14 +17,14 @@ async function run() {
         image: row[5],
         rating: {
           rate: isNaN(rate) ? 0 : rate,
-        }
+        },
       };
     });
 
     await Product.insertMany(productsData);
-    console.log('Data inserted');
+    console.log("Data inserted");
   } catch (err) {
-    console.error('Error:', err);
+    console.error("Error:", err);
   }
 }
 
