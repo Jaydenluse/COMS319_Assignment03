@@ -21,6 +21,9 @@ async function run() {
       };
     });
 
+    await Product.deleteMany({});
+    console.log("Removed existing data");
+
     await Product.insertMany(productsData);
     console.log("Data inserted");
   } catch (err) {
