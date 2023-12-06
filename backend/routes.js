@@ -1,16 +1,16 @@
-import express from 'express';
-import cors from 'cors';
-import Product from './productModel.js';
+import express from "express";
+import cors from "cors";
+import Product from "./productModel.js";
 
 const app = express();
 const port = 4000;
 
-app.use(cors()); 
+app.use(cors());
 app.use(express.json());
 app.use("/images", express.static("images"));
 
 // POST route to add a product
-app.post('/products', async (req, res) => {
+app.post("/products", async (req, res) => {
   try {
     const product = new Product(req.body);
     await product.save();
@@ -21,7 +21,7 @@ app.post('/products', async (req, res) => {
 });
 
 // GET route to retrieve all products
-app.get('/products', async (req, res) => {
+app.get("/products", async (req, res) => {
   try {
     const products = await Product.find({});
     res.status(200).send(products);
@@ -31,23 +31,22 @@ app.get('/products', async (req, res) => {
 });
 
 // GET route to retrieve a product by numeric ID
-app.get('/products/:id', async (req, res) => {
+app.get("/products/:id", async (req, res) => {
   try {
-    const productId = Number(req.params.id); 
+    const productId = Number(req.params.id);
     const product = await Product.findOne({ id: productId });
 
     if (!product) {
-      return res.status(404).send({ message: 'Product not found' });
+      return res.status(404).send({ message: "Product not found" });
     }
 
     res.status(200).send(product);
   } catch (error) {
-    res.status(500).send({ message: 'Error fetching product', error: error });
+    res.status(500).send({ message: "Error fetching product", error: error });
   }
 });
 
-
-app.put('/products/:id/update-price', async (req, res) => {
+app.put("/products/:id/update-price", async (req, res) => {
   const productId = req.params.id;
   const newPrice = req.body.newPrice;
 
@@ -63,27 +62,27 @@ app.put('/products/:id/update-price', async (req, res) => {
     );
 
     if (!product) {
-      return res.status(404).json({ error: 'Product not found' });
+      return res.status(404).json({ error: "Product not found" });
     }
 
     res.status(200).json(product);
   } catch (error) {
-    console.error('Error updating product price:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error updating product price:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
 // DELETE route to delete a product by numeric ID
-app.delete('/products/:id', async (req, res) => {
+app.delete("/products/:id", async (req, res) => {
   try {
     const productId = Number(req.params.id);
     const product = await Product.findOneAndDelete({ id: productId });
     if (!product) {
-      return res.status(404).send({ message: 'Product not found' });
+      return res.status(404).send({ message: "Product not found" });
     }
-    res.send({ message: 'Product deleted successfully', product });
+    res.send({ message: "Product deleted successfully", product });
   } catch (error) {
-    res.status(500).send({ message: 'Error deleting product', error: error });
+    res.status(500).send({ message: "Error deleting product", error: error });
   }
 });
 
