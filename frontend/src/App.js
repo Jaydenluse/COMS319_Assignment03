@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import ProductsList from './Products';
-import Header from './Header';
-import AddProductForm from './AddProductForm'; 
-import DeleteProductForm from './DeleteProductForm';
-import axios from 'axios';
-
+import React, { useState, useEffect } from "react";
+import ProductsList from "./Products";
+import Header from "./Header";
+import AddProductForm from "./AddProductForm";
+import DeleteProductForm from "./DeleteProductForm";
+import axios from "axios";
+import { StudentInfo } from "./StudentInfo";
 
 function App() {
   const [showProducts, setShowProducts] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [showAddForm, setShowAddForm] = useState(false); 
+  const [isShowingInfo, setIsShowingInfo] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
   const [showDeleteForm, setShowDeleteForm] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearchChange = (query) => {
     setSearchQuery(query);
@@ -39,35 +40,49 @@ function App() {
     setIsAdmin(!isAdmin); // Toggle admin state independently
   };
 
+  const showInfo = () => {
+    setIsShowingInfo(!isShowingInfo);
+  };
+
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get('/products')
-      .then(response => {
+    axios
+      .get("/products")
+      .then((response) => {
         setProducts(response.data);
       })
-      .catch(error => {
-        console.error('There was an error fetching the products', error);
+      .catch((error) => {
+        console.error("There was an error fetching the products", error);
       });
   }, []);
 
   return (
     <div>
-      <Header 
+      <Header
         showProducts={showProducts}
         searchQuery={searchQuery}
-        onSearchChange={handleSearchChange}        
+        onSearchChange={handleSearchChange}
         isAdmin={isAdmin}
-        showAddForm={showAddForm} 
+        showAddForm={showAddForm}
         showDeleteForm={showDeleteForm}
         onToggleProducts={handleToggleProducts}
         onToggleAdmin={handleToggleAdmin}
         onToggleAddForm={handleToggleAddForm}
-        onToggleDeleteForm={handleToggleDeleteForm} 
+        onToggleDeleteForm={handleToggleDeleteForm}
+        showInfo={showInfo}
+        isShowingInfo={isShowingInfo}
       />
-      {showProducts && <ProductsList isAdmin={isAdmin} products={products} searchQuery={searchQuery} />}
+      {isShowingInfo && <StudentInfo />}
+      {showProducts && (
+        <ProductsList
+          isAdmin={isAdmin}
+          products={products}
+          searchQuery={searchQuery}
+        />
+      )}
       {showAddForm && <AddProductForm />}
-      {showDeleteForm && <DeleteProductForm />} 
+      {showDeleteForm && <DeleteProductForm />}
     </div>
   );
 }
